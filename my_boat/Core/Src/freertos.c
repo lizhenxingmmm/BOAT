@@ -45,13 +45,17 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+osThreadId MessageTaskHandle;
+osThreadId InsTaskHandle;
+osThreadId MotorTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-
+extern void StartMessageTask(void const * argument);
+extern void StartInsTask(void const * argument);
+extern void StartMotorTask(void const * argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
@@ -107,6 +111,15 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+   osThreadDef(Message, StartMessageTask, osPriorityNormal, 0, 128);
+  MessageTaskHandle = osThreadCreate(osThread(Message), NULL);
+
+ osThreadDef(Ins, StartInsTask, osPriorityNormal, 0, 1024);
+  InsTaskHandle = osThreadCreate(osThread(Ins), NULL);
+
+ osThreadDef(Motor, StartMotorTask, osPriorityNormal, 0, 128);
+  MotorTaskHandle = osThreadCreate(osThread(Motor), NULL);
+
   /* USER CODE END RTOS_THREADS */
 
 }
